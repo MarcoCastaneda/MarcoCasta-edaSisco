@@ -16,6 +16,7 @@ namespace DL
         {
         }
 
+        public virtual DbSet<Digito> Digitos { get; set; } = null!;
         public virtual DbSet<Usuario> Usuarios { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -29,6 +30,21 @@ namespace DL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Digito>(entity =>
+            {
+                entity.HasKey(e => e.IdDigito)
+                    .HasName("PK__Dijito__5C2D835AF3B51AD2");
+
+                entity.ToTable("Digito");
+
+                entity.Property(e => e.Fecha).HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.Digitos)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("FK__Dijito__IdUsuari__1CF15040");
+            });
+
             modelBuilder.Entity<Usuario>(entity =>
             {
                 entity.HasKey(e => e.IdUsuario)
@@ -45,10 +61,6 @@ namespace DL
                     .IsUnicode(false);
 
                 entity.Property(e => e.Email)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Fecha)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 

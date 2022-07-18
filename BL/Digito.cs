@@ -1,10 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BL
 {
-    public class Usuario
+    public class Digito
     {
-        public static ML.Result Add(ML.Usuario usuario)
+        public static ML.Result Add(ML.Digito digito)
         {
 
             ML.Result result = new ML.Result();
@@ -14,7 +19,7 @@ namespace BL
                 using (DL.MarcoCastañedaGrupoSicossContext context = new DL.MarcoCastañedaGrupoSicossContext())
                 // using (SqlConnection context = new SqlConnection(DL.Conexion.GetConnection()))
                 {
-                    var query = context.Database.ExecuteSqlRaw($"UsuarioAdd'{usuario.Nombre}','{usuario.ApellidoPaterno}','{usuario.ApellidoMaterno}','{usuario.Email}','{usuario.Password}'");
+                    var query = context.Database.ExecuteSqlRaw($"DigitoAdd {digito.Numero},'{digito.Resultado}','{digito.Fecha}',{digito.IdUsuario}");
                     // string query = "UsuarioAdd";
                     if (query > 0)
                     {
@@ -38,28 +43,38 @@ namespace BL
             return result;
         }
 
-        public static ML.Result GetByEmail(string email)
+
+
+        public static ML.Result GetAll(ML.Digito digito)
         {
+
             ML.Result result = new ML.Result();
             try
             {
                 using (DL.MarcoCastañedaGrupoSicossContext context = new DL.MarcoCastañedaGrupoSicossContext())
                 {
-                    var query = context.Usuarios.FromSqlRaw($"GetByEmail '{email}'").AsEnumerable().FirstOrDefault();
+                    var query = context.Digitos.FromSqlRaw($"DigitoGetAll {digito.IdUsuario}").ToList();
 
+                    result.Objects = new List<object>();
 
                     if (query != null)
                     {
-                        ML.Usuario usuario = new ML.Usuario();
+                        foreach (var obj in query)
+                        {
 
-                        usuario.Email = query.Email;
-                        usuario.Password = query.Password;
-                        usuario.Nombre = query.Nombre;
-                        usuario.ApellidoPaterno = query.ApellidoPaterno;
-                        usuario.ApellidoMaterno = query.ApellidoMaterno;
-                        usuario.IdUsuario = query.IdUsuario;
 
-                        result.Object = usuario;
+                            digito = new ML.Digito();
+
+                            digito.IdDigito = obj.IdDigito;
+                            digito.Numero = obj.Numero.Value;
+                            digito.Resultado = obj.Resultado.Value;
+                            digito.Fecha = obj.Fecha.ToString();
+
+
+
+
+                            result.Objects.Add(digito);
+                        }
                         result.Correct = true;
                     }
                 }
@@ -72,16 +87,14 @@ namespace BL
             return result;
         }
 
-
-
-        public static ML.Result Delete(ML.Usuario usuario)
+        public static ML.Result Delete(ML.Digito digito)
         {
             ML.Result result = new ML.Result();
             try
             {
                 using (DL.MarcoCastañedaGrupoSicossContext context = new DL.MarcoCastañedaGrupoSicossContext())
                 {
-                    var query = context.Database.ExecuteSqlRaw($"UsuarioDelete {usuario.IdUsuario}");
+                    var query = context.Database.ExecuteSqlRaw($"DigitoDelete {digito.IdDigito}");
 
                     if (query >= 0)
                     {
@@ -103,5 +116,23 @@ namespace BL
             return result;
         }
 
+        public static ML.Result Calculo(ML.Digito digito)
+        {
+            ML.Result result = new ML.Result();
+
+
+
+
+
+
+           
+            
+            return result;
+
+
+
+        }
+
     }
+
 }

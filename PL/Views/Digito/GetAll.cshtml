@@ -1,0 +1,103 @@
+﻿@model ML.Digito
+@{
+    ViewBag.Title = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Super Dijito</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5> agregue el numero a calcular  </h5>
+        <hr />
+    </div>
+</div>
+
+@using (Html.BeginForm("Form", "Digito", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+   <div class="row">
+                       
+                        <div class="col-md-3" style ="display : none;">
+                            @Html.LabelFor(Model => Model.IdUsuario, new { @class = "hidden" })
+                            @Html.TextBoxFor(model => model.IdUsuario, new { @class = "hidden form-control", autocomplete = "off" })
+                            @Html.ValidationMessageFor(model => model.IdUsuario)
+                        </div>
+                        
+
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.Numero)
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-file-person-fill"></i></span>
+                                @Html.TextBoxFor(model => model.Numero, new { @class = "form-control", @id = "txtNumero", @onkeypress = "return SoloLetras(event, 'lblErrorNombre')" })
+                                @Html.ValidationMessageFor(model => model.Numero)
+                                <label id="lblErrorNombre"></label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.Resultado)
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1"><i class="bi bi-file-person-fill"></i></span>
+                                @Html.TextBoxFor(model => model.Resultado, new { @class = "form-control", @id = "txtResultado", @onkeypress = "return SoloLetras(event, 'lblErrorApellidoPaterno')" })
+                                @Html.ValidationMessageFor(model => model.Resultado)
+                                <label id="lblErrorApellidoPaterno"></label>
+                            </div>
+                        </div>
+
+
+                           
+                        <div class="col-md-3" style="margin-top: 25px;">                        
+                        
+                         <input type="submit" value="Calcular" class=" btn btn-primary" />
+                         </div>
+                         </div>
+                        
+}
+
+
+
+
+<table class="table table-dark table-hover">
+    <thead>
+        <tr>
+
+          <td style="display:none;">IdUsuario</td>
+            <td>Numero</td>
+            <td>Resultado</td>
+            <td>Fecha</td>
+
+            <td>Eliminar</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ML.Digito digito in Model.Digitos)
+        {
+            <tr>
+                <td style="display:none;">@digito.IdDigito</td>
+                <td>@digito.Numero</td>
+                <td>@digito.Resultado</td>
+                <td>@digito.Fecha</td>
+        
+                
+                
+                
+                <td><a class="btn btn-primary glyphicon glyphicon-trash" href="@Url.Action("Delete", "Digito", new {IdDigito = digito.IdDigito, IdUsuario = Model.IdUsuario})" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"></a></td>
+            </tr>
+        }
+
+   
+    
+                 
+                
+</table>
+   <div class="row">
+                    <div class="col-md-11">  
+                <td><a class="btn btn-primary " @Html.ActionLink("Borrar Historial", "Delete", "Usuario", new {IdUsuario = Model.IdUsuario})</a></td>
+                    </div>
+
+                     <div class="col-md-1">  
+                <td><a class="btn btn-primary " @Html.ActionLink("Salir", "Login", "Login")</a></td>
+                    </div>
+                    </div>
+               
+        </tbody>             

@@ -53,11 +53,11 @@ namespace PL.Controllers
 
 
 
-                    ViewBag.Mensaje = "El usuario se ha agregado";
+                    ViewBag.Mensaje = "Registro Exitoso";
                 }
                 else
                 {
-                    ViewBag.Mensaje = "El usuario no se ha agregado";
+                    ViewBag.Mensaje = "Error al hacer registro intentelo mas tarde";
                 }
             }
             else
@@ -76,6 +76,26 @@ namespace PL.Controllers
 
 
 
+            return PartialView("Modal");
+        }
+        public ActionResult Delete(int IdUsuario)
+        {
+            ML.Usuario usuario = new ML.Usuario();
+            usuario.IdUsuario = IdUsuario;
+            ML.Result result = BL.Usuario.Delete(usuario);
+
+
+
+            if (result.Correct)
+            {
+                ViewBag.IdUsuario = IdUsuario;
+                ViewBag.Mensaje = "Se ha eliminado exitosamente el registro";
+            }
+            else
+            {
+                ViewBag.Mensaje = "ocurrió un error al eliminar el registro " + result.Error;
+
+            }
             return PartialView("Modal");
         }
 

@@ -30,8 +30,8 @@ namespace PL.Controllers
                 ML.Usuario usuario = (ML.Usuario)result.Object;
                 if (usuario.Email == email && usuario.Password == password)
                 {
-
-                    return RedirectToAction("GetAll", "ListaVuelo");
+                    return RedirectToAction("GetAll", "Digito", new { IdUsuario = usuario.IdUsuario });
+                   
                 }
                 else
                 {
